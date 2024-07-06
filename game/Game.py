@@ -1,44 +1,25 @@
 from game.Player import Player
-from game.Nobles import Nobles
+from game.Noble import Noble
 from game.Card import Card
+from game.GemType import GemType
+
+from typing import Dict
 
 class Game():
-  def __init__(self, nrOfPlayers: int):
+  def __init__(self, nrOfPlayers: int, currentPlayerIndex: int, gemPiles: Dict[GemType, int], deckCards: list[list[Card]], boardCards: list[list[Card]], nobles: list[Noble]):
     self.players: list[Player] = []
     self.nrOfPlayers = nrOfPlayers
     for _ in range(self.nrOfPlayers):
       self.players.append(Player())
 
-    self._currentPlayerIndex = 0    
+    self._currentPlayerIndex = currentPlayerIndex
     self.players[self._currentPlayerIndex].turn = True
     self.currentPlayer = self.players[self._currentPlayerIndex]
 
-    self._initGemPiles(self.nrOfPlayers)
-    self._initCards()
-    self._initNobles(self.nrOfPlayers)
-
-  def _initGemPiles(self, nrOfPlayers: int):
-    self.redGemPileCount = nrOfPlayers + 2
-    self.blackGemPileCount = nrOfPlayers + 2
-    self.whiteGemPileCount = nrOfPlayers + 2
-    self.greenGemPileCount = nrOfPlayers + 2
-    self.blueGemPileCount = nrOfPlayers + 2
-    self.goldGemPileCount = 5
-
-  def _initCards(self):
-    self.level1CardsOnTable: list[Card] = []
-    self.level2CardsOnTable: list[Card] = []
-    self.level3CardsOnTable: list[Card] = []
-
-    for _ in range(4):
-      self.level1CardsOnTable.append(Card())
-      self.level2CardsOnTable.append(Card())
-      self.level3CardsOnTable.append(Card())      
-
-  def _initNobles(self, nrOfPlayers: int):
-    self.nobles: list[Nobles] = []
-    for _ in range(self.nrOfPlayers+1):
-      self.nobles.append(Nobles())
+    self.gems = gemPiles
+    self.nobles = nobles
+    self.boardCards = boardCards
+    self.deckCards = deckCards
 
   def _nextPlayer(self):
     self.players[self._currentPlayerIndex].turn = False
