@@ -1,6 +1,9 @@
 import unittest
 
-class Unittest(unittest.TestCase):
+class TestGameFlow(unittest.TestCase):
+
+  #turn_shifts_when_action_is_complete
+  #first_player_has_turn_when_new_round_starts
 
     def test_unittest(self):
         #Arrange
