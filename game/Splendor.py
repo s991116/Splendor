@@ -2,6 +2,7 @@ from game.Game import Game
 from game.GemType import GemType
 from game.Noble import Noble
 from game.Card import Card
+from game.Player import Player
 
 from typing import List
 
@@ -14,8 +15,10 @@ class Splendor:
     deckCards = self._initDeckCards()
     boardCards = self._initBoardCards()
     nobles = self._initNobles(nrOfPlayers)
+    currentPlayerIndex = 0
+    players = self._initPlayers(nrOfPlayers, currentPlayerIndex)
 
-    return Game(nrOfPlayers, 0, gemPiles, deckCards, boardCards, nobles)
+    return Game(players, currentPlayerIndex, gemPiles, deckCards, boardCards, nobles)
   
   def _initGemPiles(self, nrOfPlayers: int):
     gemPiles = {
@@ -28,6 +31,14 @@ class Splendor:
       }
     return gemPiles
   
+  def _initPlayers(self, nrOfPlayers: int, currentPlayerIndex: int):
+    players: list[Player] = []
+    for _ in range(nrOfPlayers):
+      players.append(Player())
+
+    players[currentPlayerIndex].turn = True
+    return players
+
   def _initBoardCards(self):
     boardCards : List[List[Card]] = []
 

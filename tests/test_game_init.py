@@ -5,7 +5,6 @@ from game.GemType import GemType
 
 class TestGameInit(unittest.TestCase):
 
-
   def test_first_player_start_when_game_starts(self):
     #Arrange
     game = Splendor().generateGame(3)
@@ -29,7 +28,6 @@ class TestGameInit(unittest.TestCase):
     #Assert
     self.assertEqual(len(level1Deck), 30)
     self.assertEqual(len(level1Board), 4)
-
 
   def test_three_rows_of_development_cards_with_level_1_to_3(self):
     #Arrange
