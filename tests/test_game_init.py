@@ -22,25 +22,27 @@ class TestGameInit(unittest.TestCase):
     game = Splendor().generateGame(3)
 
     #Act
-    level1Deck = game.deckCards[0]
-    level1Board = game.boardCards[0]
+    tier1Deck = game.tier1Deck
+    tier1Board = game.getTierBoardCards(1)
 
     #Assert
-    self.assertEqual(len(level1Deck), 30)
-    self.assertEqual(len(level1Board), 4)
+    self.assertEqual(len(tier1Deck.index), 40)
+    self.assertEqual(len(tier1Board.index), 4)
 
   def test_three_rows_of_development_cards_with_level_1_to_3(self):
     #Arrange
     nrOfPlayers = 2
+    game = Splendor().generateGame(nrOfPlayers)
     
     #Act
-    game = Splendor().generateGame(nrOfPlayers)
-
+    tier1Board = game.getTierBoardCards(1)
+    tier2Board = game.getTierBoardCards(2)
+    tier3Board = game.getTierBoardCards(3)
 
     #Assert
-    self.assertEqual(len(game.boardCards[0]), 4)
-    self.assertEqual(len(game.boardCards[1]), 4)
-    self.assertEqual(len(game.boardCards[2]), 4)
+    self.assertEqual(len(tier1Board.index), 4)
+    self.assertEqual(len(tier2Board.index), 4)
+    self.assertEqual(len(tier3Board.index), 4)
 
   def test_correct_number_of_gems_in_piles(self):
     #Arrange

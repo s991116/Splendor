@@ -1,10 +1,9 @@
+import os
+import pandas as pd
+
 from game.Game import Game
 from game.GemType import GemType
-from game.Noble import Noble
-from game.Card import Card
 from game.Player import Player
-
-from typing import List
 
 class Splendor:
   def __init__(self):
@@ -12,13 +11,13 @@ class Splendor:
 
   def generateGame(self, nrOfPlayers: int):
     gemPiles = self._initGemPiles(nrOfPlayers)
-    deckCards = self._initDeckCards()
-    boardCards = self._initBoardCards()
-    nobles = self._initNobles(nrOfPlayers)
+    
+    self._loadCards()
+    (tier1, tier2, tier3, nobles) = self._shuffledCards(nrOfPlayers)
+
     currentPlayerIndex = 0
     players = self._initPlayers(nrOfPlayers, currentPlayerIndex)
-
-    return Game(players, currentPlayerIndex, gemPiles, deckCards, boardCards, nobles)
+    return Game(players, currentPlayerIndex, gemPiles, tier1, tier2, tier3, nobles)
   
   def _initGemPiles(self, nrOfPlayers: int):
     gemPiles = {
@@ -39,30 +38,32 @@ class Splendor:
     players[currentPlayerIndex].turn = True
     return players
 
-  def _initBoardCards(self):
-    boardCards : List[List[Card]] = []
+  def _loadCards(self):
+    abspath = '/'.join(os.path.abspath(__file__).split('/')[:-1])
+    pathDevelopmentCards = abspath + '/decks/developmentCards.csv'
+    pathNobles = abspath + '/decks/nobles.csv'
 
-    for tier in range(3):
-      tierBoard: list[Card] = []
-      for _ in range(4):
-        boarCard = Card(tier,0,0,0,0,0,0,0)
-        tierBoard.append(boarCard)
-      boardCards.append(tierBoard)
-    return boardCards
+    self.primary_cards = self._loadDeckFromCSV(pathDevelopmentCards)
+    self.primary_nobles = self._loadDeckFromCSV(pathNobles)
 
-  def _initDeckCards(self):
-    deckCards : List[List[Card]] = []
+  def _loadDeckFromCSV(self, filePath:str):
+    if not os.path.isfile(filePath):
+      assert False, filePath + ' file does not exist'
 
-    for tier in range(3):
-      tierDeck: list[Card] = []
-      for _ in range(30):
-        deckCard = Card(tier,0,0,0,0,0,0,0)
-        tierDeck.append(deckCard)
-      deckCards.append(tierDeck)
-    return deckCards
+    return pd.read_csv(filePath) # type: ignore
 
-  def _initNobles(self, nrOfPlayers: int):
-    nobles: list[Noble] = []
-    for _ in range(nrOfPlayers+1):
-      nobles.append(Noble())
-    return nobles
+  def _shuffledCards(self, nrOfPlayers:int):
+		# Shuffle all the cards and nobles
+    shuffled_cards = self.primary_cards.sample(frac=1) # type: ignore
+    shuffled_nobles = self.primary_nobles.sample(frac=1) # type: ignore
+
+		# Organize cards in relation to their tier
+    t1_idx = shuffled_cards['tier'] == 1
+    t2_idx = shuffled_cards['tier'] == 2
+    t3_idx = shuffled_cards['tier'] == 3
+    tier1 = shuffled_cards.loc[t1_idx].reset_index(drop=True)
+    tier2 = shuffled_cards.loc[t2_idx].reset_index(drop=True)
+    tier3 = shuffled_cards.loc[t3_idx].reset_index(drop=True)
+    nobles = shuffled_nobles[-(nrOfPlayers+1):].reset_index(drop=True)
+
+    return(tier1, tier2, tier3, nobles)
