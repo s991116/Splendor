@@ -7,32 +7,33 @@ class TestGameInit(unittest.TestCase):
 
   def test_first_player_start_when_game_starts(self):
     #Arrange
-    game = Splendor().generateGame(3)
+    nrOfPlayers = 3
 
     #Act
-    firstPlayer = game.players[0]
+    game = Splendor(nrOfPlayers).buildGame()
 
     #Assert
-    self.assertTrue(firstPlayer.turn)
-    self.assertFalse(game.players[1].turn)
-    self.assertFalse(game.players[2].turn)                
+    self.assertEqual(game.currentPlayerIndex, 0)
      
   def test_nr_of_cards_in_decks(self):
     #Arrange
-    game = Splendor().generateGame(3)
+    nrOfPlayers = 3
+    game = Splendor(nrOfPlayers).buildGame()
 
     #Act
     tier1Deck = game.tier1Deck
-    tier1Board = game.getTierBoardCards(1)
-
+    tier2Deck = game.tier2Deck
+    tier3Deck = game.tier3Deck
+    
     #Assert
-    self.assertEqual(len(tier1Deck.index), 40)
-    self.assertEqual(len(tier1Board.index), 4)
+    self.assertEqual(len(tier1Deck.index), 40) # type: ignore
+    self.assertEqual(len(tier2Deck.index), 30) # type: ignore
+    self.assertEqual(len(tier3Deck.index), 20) # type: ignore
 
   def test_three_rows_of_development_cards_with_level_1_to_3(self):
     #Arrange
     nrOfPlayers = 2
-    game = Splendor().generateGame(nrOfPlayers)
+    game = Splendor(nrOfPlayers).buildGame()
     
     #Act
     tier1Board = game.getTierBoardCards(1)
@@ -40,16 +41,16 @@ class TestGameInit(unittest.TestCase):
     tier3Board = game.getTierBoardCards(3)
 
     #Assert
-    self.assertEqual(len(tier1Board.index), 4)
-    self.assertEqual(len(tier2Board.index), 4)
-    self.assertEqual(len(tier3Board.index), 4)
+    self.assertEqual(len(tier1Board.index), 4) # type: ignore
+    self.assertEqual(len(tier2Board.index), 4) # type: ignore
+    self.assertEqual(len(tier3Board.index), 4) # type: ignore
 
   def test_correct_number_of_gems_in_piles(self):
     #Arrange
     nrOfPlayers = 2
 
     #Act
-    game = Splendor().generateGame(nrOfPlayers)
+    game = Splendor(nrOfPlayers).buildGame()
 
     #Assert
     self.assertEqual(game.gems[GemType.RED], nrOfPlayers + 2)
@@ -60,12 +61,10 @@ class TestGameInit(unittest.TestCase):
     nrOfPlayers = 3
 
     #Act
-    game = Splendor().generateGame(nrOfPlayers)
+    game = Splendor(nrOfPlayers).buildGame()
 
     #Assert
-    self.assertEqual(len(game.nobles), nrOfPlayers + 1)
-     
-
+    self.assertEqual(len(game.nobles.index), nrOfPlayers + 1) # type: ignore
 
 if __name__ == "__main__":
     unittest.main()

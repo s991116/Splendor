@@ -6,21 +6,22 @@ from game.GemType import GemType
 from game.Player import Player
 
 class Splendor:
-  def __init__(self):
-    pass
-
-  def generateGame(self, nrOfPlayers: int):
-    gemPiles = self._initGemPiles(nrOfPlayers)
+  def __init__(self, nrOfPlayers:int):
+    self.nrOfPlayers = nrOfPlayers
     
     self._loadCards()
-    (tier1, tier2, tier3, nobles) = self._shuffledCards(nrOfPlayers)
+    self._shuffledCards()
+    self._selectRandomNobles(self.nrOfPlayers)
+    self._initGemPiles(self.nrOfPlayers)
 
-    currentPlayerIndex = 0
-    players = self._initPlayers(nrOfPlayers, currentPlayerIndex)
-    return Game(players, currentPlayerIndex, gemPiles, tier1, tier2, tier3, nobles)
+    self.currentPlayerIndex = 0
+    self.players = self._initPlayers(self.nrOfPlayers, self.currentPlayerIndex)
+
+  def buildGame(self):
+    return Game(self.players, self.currentPlayerIndex, self.gemPiles, self.tier1, self.tier2, self.tier3, self.nobles)
   
   def _initGemPiles(self, nrOfPlayers: int):
-    gemPiles = {
+    self.gemPiles = {
       GemType.RED: nrOfPlayers + 2,
       GemType.BLACK: nrOfPlayers + 2,
       GemType.WHITE: nrOfPlayers + 2,
@@ -28,14 +29,14 @@ class Splendor:
       GemType.BLUE: nrOfPlayers + 2,
       GemType.GOLD: 5,
       }
-    return gemPiles
+    return self
   
   def _initPlayers(self, nrOfPlayers: int, currentPlayerIndex: int):
     players: list[Player] = []
     for _ in range(nrOfPlayers):
       players.append(Player())
 
-    players[currentPlayerIndex].turn = True
+    players[currentPlayerIndex].turn = True # type: ignore
     return players
 
   def _loadCards(self):
@@ -52,18 +53,25 @@ class Splendor:
 
     return pd.read_csv(filePath) # type: ignore
 
-  def _shuffledCards(self, nrOfPlayers:int):
+  def _shuffledCards(self):
 		# Shuffle all the cards and nobles
     shuffled_cards = self.primary_cards.sample(frac=1) # type: ignore
-    shuffled_nobles = self.primary_nobles.sample(frac=1) # type: ignore
 
 		# Organize cards in relation to their tier
     t1_idx = shuffled_cards['tier'] == 1
     t2_idx = shuffled_cards['tier'] == 2
     t3_idx = shuffled_cards['tier'] == 3
-    tier1 = shuffled_cards.loc[t1_idx].reset_index(drop=True)
-    tier2 = shuffled_cards.loc[t2_idx].reset_index(drop=True)
-    tier3 = shuffled_cards.loc[t3_idx].reset_index(drop=True)
-    nobles = shuffled_nobles[-(nrOfPlayers+1):].reset_index(drop=True)
+    self.tier1 = shuffled_cards.loc[t1_idx].reset_index(drop=True)
+    self.tier2 = shuffled_cards.loc[t2_idx].reset_index(drop=True)
+    self.tier3 = shuffled_cards.loc[t3_idx].reset_index(drop=True)
+    
+    return self
+  
+  def _selectRandomNobles(self, nrOfPlayers:int):
+		# Shuffle nobles
+    shuffled_nobles = self.primary_nobles.sample(frac=1) # type: ignore
 
-    return(tier1, tier2, tier3, nobles)
+		# Organize cards in relation to their tier
+    self.nobles = shuffled_nobles[-(nrOfPlayers+1):].reset_index(drop=True)
+
+    return self
