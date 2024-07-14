@@ -13,7 +13,7 @@ class TestGameInit(unittest.TestCase):
     game = Splendor(nrOfPlayers).buildGame()
 
     #Assert
-    self.assertEqual(game.currentPlayerIndex, 0)
+    self.assertEqual(game.gameBoard.currentPlayerIndex, 0)
      
   def test_nr_of_cards_in_decks(self):
     #Arrange
@@ -21,9 +21,9 @@ class TestGameInit(unittest.TestCase):
     game = Splendor(nrOfPlayers).buildGame()
 
     #Act
-    tier1Deck = game.tier1Deck
-    tier2Deck = game.tier2Deck
-    tier3Deck = game.tier3Deck
+    tier1Deck = game.gameBoard.tier1
+    tier2Deck = game.gameBoard.tier2
+    tier3Deck = game.gameBoard.tier3
     
     #Assert
     self.assertEqual(len(tier1Deck.index), 40) # type: ignore
@@ -53,8 +53,8 @@ class TestGameInit(unittest.TestCase):
     game = Splendor(nrOfPlayers).buildGame()
 
     #Assert
-    self.assertEqual(game.gems[GemType.RED], nrOfPlayers + 2)
-    self.assertEqual(game.gems[GemType.GOLD], 5)
+    self.assertEqual(game.gameBoard.gemPiles[GemType.RED], nrOfPlayers + 2)
+    self.assertEqual(game.gameBoard.gemPiles[GemType.GOLD], 5)
 
   def test_start_with_players_plus_1_nobles(self):
     #Arrange
@@ -64,7 +64,7 @@ class TestGameInit(unittest.TestCase):
     game = Splendor(nrOfPlayers).buildGame()
 
     #Assert
-    self.assertEqual(len(game.nobles.index), nrOfPlayers + 1) # type: ignore
+    self.assertEqual(len(game.gameBoard.nobles.index), nrOfPlayers + 1) # type: ignore
 
 if __name__ == "__main__":
     unittest.main()

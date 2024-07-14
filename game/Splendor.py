@@ -4,6 +4,7 @@ import pandas as pd
 from game.Game import Game
 from game.GemType import GemType
 from game.Player import Player
+from game.GameBoard import GameBoard
 
 class Splendor:
   def __init__(self, nrOfPlayers:int):
@@ -17,8 +18,9 @@ class Splendor:
     self.currentPlayerIndex = 0
     self.players = self._initPlayers(self.nrOfPlayers, self.currentPlayerIndex)
 
-  def buildGame(self):
-    return Game(self.players, self.currentPlayerIndex, self.gemPiles, self.tier1, self.tier2, self.tier3, self.nobles)
+  def buildGame(self):    
+    gameBoard = GameBoard(self.players, self.currentPlayerIndex, self.gemPiles, self.tier1, self.tier2, self.tier3, self.nobles)
+    return Game(gameBoard)
   
   def _initGemPiles(self, nrOfPlayers: int):
     self.gemPiles = {
@@ -33,11 +35,22 @@ class Splendor:
   
   def _initPlayers(self, nrOfPlayers: int, currentPlayerIndex: int):
     players: list[Player] = []
+    stack = self.emptyPlayerStack()
     for _ in range(nrOfPlayers):
-      players.append(Player())
+      players.append(Player(stack))
 
     players[currentPlayerIndex].turn = True # type: ignore
     return players
+
+  def emptyPlayerStack(self):
+    return {
+      GemType.RED: 0,
+      GemType.BLACK: 0,
+      GemType.WHITE: 0,
+      GemType.GREEN: 0,
+      GemType.BLUE: 0,
+      GemType.GOLD: 0,
+      }
 
   def _loadCards(self):
     abspath = '/'.join(os.path.abspath(__file__).split('/')[:-1])

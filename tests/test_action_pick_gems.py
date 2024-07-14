@@ -19,16 +19,16 @@ class TestActionPickGems(unittest.TestCase):
         game.takeGems({GemType.BLACK: 1, GemType.BLUE: 1, GemType.GREEN: 1})
 
         #Assert
-        blackGems = game.gems[GemType.BLACK]
+        blackGems = game.gameBoard.gemPiles[GemType.BLACK]
         self.assertEqual(blackGems, 4)
-        blackGems = game.gems[GemType.BLUE]
+        blackGems = game.gameBoard.gemPiles[GemType.BLUE]
         self.assertEqual(blackGems, 4)
-        blackGems = game.gems[GemType.GREEN]
+        blackGems = game.gameBoard.gemPiles[GemType.GREEN]
         self.assertEqual(blackGems, 4)
-        blackGems = game.gems[GemType.WHITE]
+        blackGems = game.gameBoard.gemPiles[GemType.WHITE]
         self.assertEqual(blackGems, 5)
 
-        self.assertEqual(game.players[0].gemStack[GemType.BLACK], 1)
+        self.assertEqual(game.gameBoard.players[0].gemStack[GemType.BLACK], 1)
 
 
 if __name__ == "__main__":
