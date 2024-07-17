@@ -31,11 +31,11 @@ class Game():
 
     self._nextPlayer()
 
-#  def reserveActions(self, actionType: ActionType):
-#    actions: list[Action] = []
-#    for card in self.getAllTierBoardCards().iterrows(): # type: ignore
-#      actions.append(ReserveAction() # type: ignore
-#    return actions  
+  def reserveActions(self, actionType: ActionType):
+    actions: list[Action] = []
+    for card in self.getAllTierBoardCards().itertuples(): # type: ignore
+      actions.append(ReserveAction(pd.DataFrame(card)))
+    return actions  
 
   def getAllTierBoardCards(self):
     shown_tier1 = self.gameBoard.tier1[-min(4, len(self.gameBoard.tier1)):].reset_index(drop=True)

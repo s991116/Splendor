@@ -35,14 +35,15 @@ class Splendor:
   
   def _initPlayers(self, nrOfPlayers: int, currentPlayerIndex: int):
     players: list[Player] = []
-    stack = self.emptyPlayerStack()
+    stack = self.emptyGemStack()
+    reservedCard = pd.DataFrame(columns=['tier','value','type','green','white','blue','black','red'])
     for _ in range(nrOfPlayers):
-      players.append(Player(stack))
+      players.append(Player(stack, reservedCard))
 
     players[currentPlayerIndex].turn = True # type: ignore
     return players
 
-  def emptyPlayerStack(self):
+  def emptyGemStack(self):
     return {
       GemType.RED: 0,
       GemType.BLACK: 0,
@@ -81,10 +82,15 @@ class Splendor:
     return self
   
   def _selectRandomNobles(self, nrOfPlayers:int):
+
 		# Shuffle nobles
     shuffled_nobles = self.primary_nobles.sample(frac=1) # type: ignore
 
 		# Organize cards in relation to their tier
     self.nobles = shuffled_nobles[-(nrOfPlayers+1):].reset_index(drop=True)
 
+    return self
+  
+  def withEmptyGemStack(self):
+    self.gemPiles = self.emptyGemStack()
     return self
