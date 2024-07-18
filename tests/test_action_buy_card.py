@@ -11,6 +11,15 @@ class TestActionBuyCard(unittest.TestCase):
     #replace_empty_slot_when_card_is_bought 
     #leave_slot_empty_if_dect_has_run_out
 
+# test_BuyCardFromBoardCombinations
+
+# test_GetGemCombinations
+# test_GetGemCombinationsAndReturn
+# test_new_card_added_to_board_ater_card_is_reserved
+# test_no_card_added_to_board_if_deck_is_empty
+
+
+
     def test_unittest(self):
         #Arrange
 
