@@ -5,7 +5,12 @@ from game.ActionType import ActionType
 from game.GemType import GemType
 from game.ReserveAction import ReserveAction
 
+#Can only reserve 3 cards
+
 class TestActionReserveCard(unittest.TestCase):
+
+# test_player_can_only_reserve_three_cards
+# test_reserve_last_card_is_not_replaced
 
   def test_ReserveActions_with_all_12_cards(self):
     #Arrange
@@ -56,18 +61,19 @@ class TestActionReserveCard(unittest.TestCase):
     #Arrange
     nrOfPlayers = 2
     game = Splendor(nrOfPlayers).buildGame()
-    card = game.getTierBoardCards(2).head(1)
+    reserveCardTier = 2
+    reserveCardindex = 1
 
     #Act
-    action = ReserveAction(card)
+    action = ReserveAction(reserveCardTier, reserveCardindex)
     gameboard = action.execute(game.gameBoard)
 
     #Assert
     currentPlayerIndex = game.gameBoard.currentPlayerIndex
-    reservedCardIndex = card.head(1).index.tolist()[0] # type: ignore
 
-    self.assertIn(reservedCardIndex, gameboard.players[currentPlayerIndex].reserved.index) # type: ignore
-    self.assertNotIn(reservedCardIndex, gameboard.tier2.index) # type: ignore
+    self.assertIn((reserveCardTier, reserveCardindex), gameboard.players[currentPlayerIndex].reserved)
+    
+    self.assertNotIn(reserveCardindex, gameboard.developmentDeckTiersBoardIndexes[reserveCardTier]) # type: ignore
 
 if __name__ == "__main__":
     unittest.main()

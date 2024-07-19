@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-import pandas as pd
-
+import numpy as np
 from game.GemType import GemType
 from game.GameBoard import GameBoard
 from typing import Dict
@@ -32,22 +31,15 @@ class Game():
     self._nextPlayer()
 
   def reserveActions(self, actionType: ActionType):
+    
     actions: list[Action] = []
-    for card in self.getAllTierBoardCards().itertuples(): # type: ignore
-      actions.append(ReserveAction(pd.DataFrame(card)))
+    for tierIndex in range(len(self.gameBoard.developmentDeckTiersBoardIndexes)):
+      for boardCardIndex in self.gameBoard.developmentDeckTiersBoardIndexes[tierIndex]:
+        actions.append(ReserveAction(tierIndex, boardCardIndex))
     return actions  
 
   def getAllTierBoardCards(self):
-    shown_tier1 = self.gameBoard.tier1[-min(4, len(self.gameBoard.tier1)):].reset_index(drop=True)
-    shown_tier2 = self.gameBoard.tier2[-min(4, len(self.gameBoard.tier2)):].reset_index(drop=True)
-    shown_tier3 = self.gameBoard.tier3[-min(4, len(self.gameBoard.tier3)):].reset_index(drop=True)
-    return pd.concat([shown_tier1,shown_tier2, shown_tier3]) # type: ignore
-  
-  def getTierBoardCards(self, tier:int):
-    if tier == 1:
-      return self.gameBoard.tier1[-min(4, len(self.gameBoard.tier1)):].reset_index(drop=True)
-    elif tier == 2:
-      return self.gameBoard.tier2[-min(4, len(self.gameBoard.tier2)):].reset_index(drop=True)
-    elif tier == 3:
-      return self.gameBoard.tier3[-min(4, len(self.gameBoard.tier3)):].reset_index(drop=True)
-    assert False, 'Incorrect tier number'
+    boardCardsTiers: list[np.ndarray[int, np.dtype[np.int32]]] = []
+    for developmenTier in self.gameBoard.developmentCardTiers:
+      boardCardsTiers.append(developmenTier[0:3,:])
+    return boardCardsTiers

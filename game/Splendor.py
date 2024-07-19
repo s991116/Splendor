@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import numpy as np
 
 from game.Game import Game
 from game.GemType import GemType
@@ -10,16 +11,19 @@ class Splendor:
   def __init__(self, nrOfPlayers:int):
     self.nrOfPlayers = nrOfPlayers
     
-    self._loadCards()
-    self._shuffledCards()
-    self._selectRandomNobles(self.nrOfPlayers)
+    developmentDeck = self._loadCards('/decks/developmentCards.csv')    
+    self.developmentDeckTiers = self._shuffledDevelopmentCards(developmentDeck)
+    self.developmentDeckTiersBoardIndexes = [[*range(4)],[*range(4)],[*range(4)]]
+    nobles = self._loadCards('/decks/nobles.csv')
+    self.nobles = self._selectRandomNobles(self.nrOfPlayers, nobles)
+
     self._initGemPiles(self.nrOfPlayers)
 
     self.currentPlayerIndex = 0
     self.players = self._initPlayers(self.nrOfPlayers, self.currentPlayerIndex)
 
   def buildGame(self):    
-    gameBoard = GameBoard(self.players, self.currentPlayerIndex, self.gemPiles, self.tier1, self.tier2, self.tier3, self.nobles)
+    gameBoard = GameBoard(self.players, self.currentPlayerIndex, self.gemPiles, self.developmentDeckTiers, self.developmentDeckTiersBoardIndexes, self.nobles)
     return Game(gameBoard)
   
   def _initGemPiles(self, nrOfPlayers: int):
@@ -36,11 +40,8 @@ class Splendor:
   def _initPlayers(self, nrOfPlayers: int, currentPlayerIndex: int):
     players: list[Player] = []
     stack = self.emptyGemStack()
-    reservedCard = pd.DataFrame(columns=['tier','value','type','green','white','blue','black','red'])
     for _ in range(nrOfPlayers):
-      players.append(Player(stack, reservedCard))
-
-    players[currentPlayerIndex].turn = True # type: ignore
+      players.append(Player(stack, []))
     return players
 
   def emptyGemStack(self):
@@ -53,44 +54,32 @@ class Splendor:
       GemType.GOLD: 0,
       }
 
-  def _loadCards(self):
+  def _loadCards(self, filename: str):
     abspath = '/'.join(os.path.abspath(__file__).split('/')[:-1])
-    pathDevelopmentCards = abspath + '/decks/developmentCards.csv'
-    pathNobles = abspath + '/decks/nobles.csv'
-
-    self.primary_cards = self._loadDeckFromCSV(pathDevelopmentCards)
-    self.primary_nobles = self._loadDeckFromCSV(pathNobles)
+    pathCards = abspath + filename
+    return self._loadDeckFromCSV(pathCards)
 
   def _loadDeckFromCSV(self, filePath:str):
     if not os.path.isfile(filePath):
       assert False, filePath + ' file does not exist'
 
-    return pd.read_csv(filePath) # type: ignore
+    deck: np.ndarray[int, np.dtype[np.int32]] = pd.read_csv(filePath).to_numpy() # type: ignore
+    return deck
 
-  def _shuffledCards(self):
-		# Shuffle all the cards and nobles
-    shuffled_cards = self.primary_cards.sample(frac=1) # type: ignore
+  def _shuffledDevelopmentCards(self, deck: np.ndarray[int, np.dtype[np.int32]]):
+		# Shuffle all development cards
+    np.random.shuffle(deck)
+    #Split into tiers
+    developmentCardTiers: list[np.ndarray[int, np.dtype[np.int32]]] = []
+    for tier in range(1,4):
+      developmentCardTiers.append(deck[ (deck[:,0]==tier) ])
+    return developmentCardTiers
 
-		# Organize cards in relation to their tier
-    t1_idx = shuffled_cards['tier'] == 1
-    t2_idx = shuffled_cards['tier'] == 2
-    t3_idx = shuffled_cards['tier'] == 3
-    self.tier1 = shuffled_cards.loc[t1_idx].reset_index(drop=True)
-    self.tier2 = shuffled_cards.loc[t2_idx].reset_index(drop=True)
-    self.tier3 = shuffled_cards.loc[t3_idx].reset_index(drop=True)
-    
-    return self
-  
-  def _selectRandomNobles(self, nrOfPlayers:int):
 
-		# Shuffle nobles
-    shuffled_nobles = self.primary_nobles.sample(frac=1) # type: ignore
+  def _selectRandomNobles(self, nrOfPlayers:int, nobles: np.ndarray[int, np.dtype[np.int32]]):
+    np.random.shuffle(nobles)
+    return nobles[0:nrOfPlayers+1, :]
 
-		# Organize cards in relation to their tier
-    self.nobles = shuffled_nobles[-(nrOfPlayers+1):].reset_index(drop=True)
-
-    return self
-  
   def withEmptyGemStack(self):
     self.gemPiles = self.emptyGemStack()
     return self
