@@ -83,3 +83,15 @@ class Splendor:
   def withEmptyGemStack(self):
     self.gemPiles = self.emptyGemStack()
     return self
+  
+  def with3CardsReserved(self):
+    for tierIndex in range(3):
+      for deckIndex in range(4):
+        self.developmentDeckTiersBoardIndexes[tierIndex][deckIndex] += 3
+
+    self.players[self.currentPlayerIndex].reserved = [(0,0), (0,1), (0,2)]
+    return self
+  
+  def withLastCardsOnBoard(self):
+    self.developmentDeckTiersBoardIndexes = [[39],[29],[19]]
+    return self

@@ -33,7 +33,9 @@ class Game():
   def reserveActions(self, actionType: ActionType):
     
     actions: list[Action] = []
-    for tierIndex in range(len(self.gameBoard.developmentDeckTiersBoardIndexes)):
-      for boardCardIndex in self.gameBoard.developmentDeckTiersBoardIndexes[tierIndex]:
-        actions.append(ReserveAction(tierIndex, boardCardIndex))
+
+    if(len(self.gameBoard.players[self.gameBoard.currentPlayerIndex].reserved) < 3):
+      for tierIndex in range(len(self.gameBoard.developmentDeckTiersBoardIndexes)):
+        for boardCardIndex in self.gameBoard.developmentDeckTiersBoardIndexes[tierIndex]:
+          actions.append(ReserveAction(tierIndex, boardCardIndex))
     return actions  

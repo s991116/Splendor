@@ -24,7 +24,11 @@ class ReserveAction(Action):
     maxIndex = max(range(len(tierBoardIndexes)), key=tierBoardIndexes.__getitem__)
     maxValue = tierBoardIndexes[maxIndex]
     newMaxValue = maxValue + 1
-    gameBoard.developmentDeckTiersBoardIndexes[self.tierIndex][self.cardIndex] = newMaxValue
+    maxValueTier = [40,30,20]
+    if(newMaxValue >= maxValueTier[self.tierIndex]):
+      gameBoard.developmentDeckTiersBoardIndexes[self.tierIndex].remove(self.cardIndex)
+    else:
+      gameBoard.developmentDeckTiersBoardIndexes[self.tierIndex][self.cardIndex] = newMaxValue
 
     return gameBoard
   
