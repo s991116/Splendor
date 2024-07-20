@@ -10,7 +10,7 @@ class TestGameFlow(unittest.TestCase):
     game = Splendor(nrOfPlayers).buildGame()
 
     #Act
-    game.takeGems({GemType.BLACK: 1, GemType.BLUE: 1, GemType.GREEN: 1})
+    game.nextPlayer()
 
     #Assert
     self.assertEqual(game.gameBoard.currentPlayerIndex, 1)
@@ -21,9 +21,9 @@ class TestGameFlow(unittest.TestCase):
     game = Splendor(nrOfPlayers).buildGame()
 
     #Act
-    game.takeGems({GemType.BLACK: 1, GemType.BLUE: 1, GemType.GREEN: 1})
-    game.takeGems({GemType.BLACK: 1, GemType.BLUE: 1, GemType.GREEN: 1})
-    game.takeGems({GemType.BLACK: 1, GemType.BLUE: 1, GemType.GREEN: 1})
+    game.nextPlayer()
+    game.nextPlayer()
+    game.nextPlayer()
 
     #Assert
     self.assertEqual(game.gameBoard.currentPlayerIndex, 0)     
