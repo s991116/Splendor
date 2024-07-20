@@ -37,9 +37,3 @@ class Game():
       for boardCardIndex in self.gameBoard.developmentDeckTiersBoardIndexes[tierIndex]:
         actions.append(ReserveAction(tierIndex, boardCardIndex))
     return actions  
-
-  def getAllTierBoardCards(self):
-    boardCardsTiers: list[np.ndarray[int, np.dtype[np.int32]]] = []
-    for developmenTier in self.gameBoard.developmentCardTiers:
-      boardCardsTiers.append(developmenTier[0:3,:])
-    return boardCardsTiers

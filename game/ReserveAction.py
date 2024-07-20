@@ -29,4 +29,4 @@ class ReserveAction(Action):
     return gameBoard
   
   def getType(self) -> ActionType:
-    return ActionType.TAKEGEM
+    return ActionType.RESERVE
