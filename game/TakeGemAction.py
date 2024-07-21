@@ -1,17 +1,15 @@
 from game.Action import Action
 from game.ActionType import ActionType
 from game.GameBoard import GameBoard
-from game.GemType import GemType
-from typing import Dict
   
-class TakeGemActions(Action):
-  def __init__(self, gemsTaken: Dict[GemType, int]) -> None:
+class TakeGemAction(Action):
+  def __init__(self, gemsTaken: list[int]) -> None:
     self.gemsTaken = gemsTaken
   
   def execute(self, gameBoard: GameBoard) -> GameBoard:
-    for (gemType, take) in self.gemsTaken.items():
+    for gemType in self.gemsTaken:
       stack = gameBoard.gemPiles[gemType]
-      left = stack - take
+      left = stack - 1
       assert left > 0, 'To many gems taken'
       gameBoard.gemPiles[gemType] = left
       player = gameBoard.players[gameBoard.currentPlayerIndex]

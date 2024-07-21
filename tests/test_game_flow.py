@@ -1,7 +1,6 @@
 import unittest
 
 from game.Splendor import Splendor
-from game.GemType import GemType
 class TestGameFlow(unittest.TestCase):
 
   def test_turn_shifts_when_action_is_complete(self):
