@@ -43,7 +43,7 @@ class TestActionReserveCard(unittest.TestCase):
 
     #Assert
     currentPlayerIndex = game.gameBoard.currentPlayerIndex
-    playerGemStack = gameboard.players[currentPlayerIndex].gemStack
+    playerGemStack = gameboard.players[currentPlayerIndex].gemPiles
     playerGoldStack = playerGemStack[GemType.GOLD]
     self.assertEqual(playerGoldStack, 1)
 
@@ -61,7 +61,7 @@ class TestActionReserveCard(unittest.TestCase):
 
     #Assert
     currentPlayerIndex = game.gameBoard.currentPlayerIndex
-    playerGemStack = gameboard.players[currentPlayerIndex].gemStack
+    playerGemStack = gameboard.players[currentPlayerIndex].gemPiles
     playerGoldStack = playerGemStack[GemType.GOLD]
     self.assertEqual(playerGoldStack, 0)
 

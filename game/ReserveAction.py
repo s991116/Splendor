@@ -14,7 +14,7 @@ class ReserveAction(Action):
     gameGoldStack = gameBoard.gemPiles[GemType.GOLD]
     if(gameGoldStack > 0):
       gameBoard.gemPiles[GemType.GOLD] -= 1
-      gameBoard.players[currentPlayerIndex].gemStack[GemType.GOLD] += 1
+      gameBoard.players[currentPlayerIndex].gemPiles[GemType.GOLD] += 1
 
     #Copy card to reserve
     gameBoard.players[currentPlayerIndex].reserved.append((self.tierIndex, self.cardIndex))

@@ -89,6 +89,10 @@ class Splendor:
     self.players[self.currentPlayerIndex].reserved = [(0,0), (0,1), (0,2)]
     return self
   
+  def withFirstPlayerHaveGemStack(self, playerGemStack: list[int]):    
+    self.players[0].gemPiles = playerGemStack
+    return self
+
   def withLastCardsOnBoard(self):
     self.developmentDeckTiersBoardIndexes = [[39],[29],[19]]
     return self
