@@ -152,9 +152,37 @@ class Game():
         if (boardGemPiles[gemType] >= 4):
           self.addRemoveCombinationsToActions(actions, combinationsWith1GemCounts[gemType], playersGemPiles, combinationsReturn2Gem)
           
-          #TODO Taking 2 of same type and remove 2 gems
-      #Player allready has 9 gems
-      #Player allready has 8 gems
+    #Player allready have 9 gems
+    elif(sum(playersGemPiles) == 9): 
+      self.nettoGemsTakenCombinations: set[tuple[int,int,int,int,int]] = set()
+      #3 gems of different type
+      for gemCombination in combinationWith3GemCounts:
+        #is the gems on the board?
+        gemsLeft = [a_i - b_i for a_i, b_i in zip(boardGemPiles, gemCombination)]
+        if sum(n < 0 for n in gemsLeft) == 0:
+            #Verify return Combinations is possible, playersGem + gemsTaken - gemsReturned > 0
+            self.addRemoveCombinationsToActions(actions, gemCombination, playersGemPiles, combinationsReturn2Gem)
+
+      #2 gems of same type
+      for gemType in range(5):
+        if (boardGemPiles[gemType] >= 4):
+          self.addRemoveCombinationsToActions(actions, combinationsWith1GemCounts[gemType], playersGemPiles, combinationsReturn1Gem)
+
+    #Player allready have 8 gems
+    elif(sum(playersGemPiles) == 8): 
+      self.nettoGemsTakenCombinations: set[tuple[int,int,int,int,int]] = set()
+      #3 gems of different type
+      for gemCombination in combinationWith3GemCounts:
+        #is the gems on the board?
+        gemsLeft = [a_i - b_i for a_i, b_i in zip(boardGemPiles, gemCombination)]
+        if sum(n < 0 for n in gemsLeft) == 0:
+            #Verify return Combinations is possible, playersGem + gemsTaken - gemsReturned > 0
+            self.addRemoveCombinationsToActions(actions, gemCombination, playersGemPiles, combinationsReturn1Gem)
+
+      #2 gems of same type
+      for gemType in range(5):
+        if(boardGemPiles[gemType] >= 4):
+          actions.append(TakeGemAction(tuple(combinationsWith1GemCounts[gemType])))
   
     return actions
 

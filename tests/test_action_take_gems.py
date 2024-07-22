@@ -4,6 +4,8 @@ import dataclasses
 from game.Splendor import Splendor
 from game.GemType import GemType
 from game.TakeGemAction import TakeGemAction
+from game.Game import Game
+from game.Action import Action
 
 class TestActionTakeGems(unittest.TestCase):
     
@@ -42,28 +44,46 @@ class TestActionTakeGems(unittest.TestCase):
         #Assert
         self.assertEqual(len(actions), 10)
 
-    def test_gem_actions_return_gems_with_more_than_10_gems(self):
+    def test_gem_actions_when_starting_with_10_gems(self):
         #Arrange
         nrOfPlayers = 4
         game = Splendor(nrOfPlayers).withFirstPlayerHaveGemStack([2,2,2,2,2,0]).buildGame()
-        #6 of each GemType
-        #4 on board and 2 for first player
-        #board gems 4 4 4 4 4 5
-        #first player has 10 gems (max) 
-        #first player gems: 2 2 2 2 2 0
-        #there are 15 combinations to take gems from
-        #diff gems:
-        # 0  0  0  0  0
-        # 1 -1  0  0  0
-        # 1  0  0  0 -1
-
 
         #Act
         actions = game.takeGemActions()
 
         #Assert
-        #Execute all actions
+        totalGemPilesCombinations = 151
+        self.AssertAllCombinationsAreValidAndUnique(game, actions, totalGemPilesCombinations)
+
+    def test_gem_actions_when_starting_with_9_gems(self):
+        #Arrange
+        nrOfPlayers = 4
+        game = Splendor(nrOfPlayers).withFirstPlayerHaveGemStack([2,2,2,1,2,0]).buildGame()
+
+        #Act
+        actions = game.takeGemActions()
+
+        #Assert
+        totalGemPilesCombinations = 81
+        self.AssertAllCombinationsAreValidAndUnique(game, actions, totalGemPilesCombinations)
+
+    def test_gem_actions_when_starting_with_8_gems(self):
+        #Arrange
+        nrOfPlayers = 4
+        game = Splendor(nrOfPlayers).withFirstPlayerHaveGemStack([2,1,2,1,2,0]).buildGame()
+
+        #Act
+        actions = game.takeGemActions()
+
+        #Assert
+        totalGemPilesCombinations = 35
+        self.AssertAllCombinationsAreValidAndUnique(game, actions, totalGemPilesCombinations)
+
+
+    def AssertAllCombinationsAreValidAndUnique(self, game: Game, actions: list[Action], totalGemPilesCombinations: int):
         gemPilesCombinations: list[list[int]] = []
+        #Execute all actions
         for action in actions:
             gameBoard = game.gameBoard.deepCopy()
             playerGems = action.execute(gameBoard).players[gameBoard.currentPlayerIndex].gemPiles
@@ -86,8 +106,7 @@ class TestActionTakeGems(unittest.TestCase):
             
             #self.assertFalse(playersGemsTuple in playerGemsCombinationsSet)
             playerGemsCombinationsSet.add(playersGemsTuple)
-        
-        self.assertEqual(len(gemPilesCombinations), 151)
+        self.assertEqual(len(gemPilesCombinations), totalGemPilesCombinations)
 
     def test_take_3_different_colors_from_pool(self):
         #Arrange
