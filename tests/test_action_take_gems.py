@@ -1,5 +1,4 @@
 import unittest
-import dataclasses
 
 from game.Splendor import Splendor
 from game.GemType import GemType
@@ -79,7 +78,6 @@ class TestActionTakeGems(unittest.TestCase):
         #Assert
         totalGemPilesCombinations = 35
         self.AssertAllCombinationsAreValidAndUnique(game, actions, totalGemPilesCombinations)
-
 
     def AssertAllCombinationsAreValidAndUnique(self, game: Game, actions: list[Action], totalGemPilesCombinations: int):
         gemPilesCombinations: list[list[int]] = []

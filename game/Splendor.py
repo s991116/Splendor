@@ -39,7 +39,7 @@ class Splendor:
     players: list[Player] = []
     stack = self.emptyGemStack()
     for _ in range(nrOfPlayers):
-      players.append(Player(stack, []))
+      players.append(Player(stack, [], []))
     return players
 
   def emptyGemStack(self):
