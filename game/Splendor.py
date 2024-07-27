@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import numpy as np
+import numpy.typing as npt
 
 from game.Game import Game
 from game.Player import Player
@@ -17,7 +18,6 @@ class Splendor:
     self.nobles = self._selectRandomNobles(self.nrOfPlayers, nobles)
 
     self.gemPiles = self._initGemPiles(self.nrOfPlayers)
-
     self.currentPlayerIndex = 0
     self.players = self._initPlayers(self.nrOfPlayers, self.currentPlayerIndex)
 
@@ -25,28 +25,32 @@ class Splendor:
     gameBoard = GameBoard(self.players, self.currentPlayerIndex, self.gemPiles, self.developmentDeckTiers, self.developmentDeckTiersBoardIndexes, self.nobles)
     return Game(gameBoard)
   
-  def _initGemPiles(self, nrOfPlayers: int):    
-    return [
+  def _initGemPiles(self, nrOfPlayers: int) -> npt.NDArray[np.int64]:    
+    return np.array([
       nrOfPlayers + 2,
       nrOfPlayers + 2,
       nrOfPlayers + 2,
       nrOfPlayers + 2,
       nrOfPlayers + 2,
       5,
-    ]
+    ])
   
   def _initPlayers(self, nrOfPlayers: int, currentPlayerIndex: int):
     players: list[Player] = []
     stack = self.emptyGemStack()
+    developmentValues = self.emptyDevelopmentValues()
     for _ in range(nrOfPlayers):
-      players.append(Player(stack, [], []))
+      players.append(Player(stack, [], [], developmentValues))
     return players
 
   def emptyGemStack(self):
     return self.withGemStackOf(0)
   
-  def withGemStackOf(self, stackSize:int):    
-    return [stackSize, stackSize, stackSize, stackSize, stackSize, stackSize, ]
+  def withGemStackOf(self, stackSize:int) -> npt.NDArray[np.int64]:
+    return np.array([stackSize, stackSize, stackSize, stackSize, stackSize, stackSize, ])
+
+  def emptyDevelopmentValues(self) -> npt.NDArray[np.int64]:
+    return np.array([0,0,0,0,0])
 
   def _loadCards(self, filename: str):
     abspath = '/'.join(os.path.abspath(__file__).split('/')[:-1])
@@ -90,9 +94,21 @@ class Splendor:
     return self
   
   def withFirstPlayerHaveGemStack(self, playerGemStack: list[int]):    
-    self.players[0].gemPiles = playerGemStack
+    self.players[0].gemPiles = np.array(playerGemStack)
     return self
 
   def withLastCardsOnBoard(self):
     self.developmentDeckTiersBoardIndexes = [[39],[29],[19]]
+    return self
+  
+  def withDevelopmentValues(self, developmentValues: list[int]):
+    self.players[0].developmentValues = np.array(developmentValues)
+    return self
+  
+  def withCardPrice(self, cardPrice: list[int]):
+    for developmentDeck in self.developmentDeckTiers:
+      for developmentCard in developmentDeck:
+        #tier,value,type,green,white,blue,black,red
+        developmentCard[3:8] = cardPrice
+    
     return self

@@ -2,12 +2,13 @@ from dataclasses import dataclass
 
 from game.Player import Player
 import numpy as np
+import numpy.typing as npt
 
 @dataclass
 class GameBoard():
   players: list[Player]
   currentPlayerIndex: int
-  gemPiles: list[int]
+  gemPiles: npt.NDArray[np.int64]
   developmentCardTiers: list[np.ndarray[int, np.dtype[np.int32]]]
   developmentDeckTiersBoardIndexes: list[list[int]]
   nobles: np.ndarray[int, np.dtype[np.int32]]
