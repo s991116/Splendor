@@ -3,7 +3,7 @@ from game.ActionType import ActionType
 from game.GameBoard import GameBoard
 from game.GemType import GemType
 
-class ReserveAction(Action):
+class ReserveCardAction(Action):
   
   def __init__(self, tierIndex: int, boardCardIndex: int) -> None:
     self.tierIndex = tierIndex
@@ -19,16 +19,8 @@ class ReserveAction(Action):
     #Copy card to reserve
     gameBoard.players[currentPlayerIndex].reserved.append((self.tierIndex, self.boardCardIndex))
 
-    #Remove card from tier board Deck
-    tierBoardIndexes = gameBoard.developmentDeckTiersBoardIndexes[self.tierIndex]
-    maxIndex = max(range(len(tierBoardIndexes)), key=tierBoardIndexes.__getitem__)
-    maxValue = tierBoardIndexes[maxIndex]
-    newMaxValue = maxValue + 1
-    maxValueTier = [40,30,20]
-    if(newMaxValue >= maxValueTier[self.tierIndex]):
-      gameBoard.developmentDeckTiersBoardIndexes[self.tierIndex].remove(self.boardCardIndex)
-    else:
-      gameBoard.developmentDeckTiersBoardIndexes[self.tierIndex][self.boardCardIndex] = newMaxValue
+    #Replace card on board
+    gameBoard = super().replaceBoardCard(gameBoard, self.tierIndex, self.boardCardIndex)
 
     return gameBoard
   

@@ -3,7 +3,7 @@ import unittest
 from game.Splendor import Splendor
 from game.ActionType import ActionType
 from game.GemType import GemType
-from game.ReserveAction import ReserveAction
+from game.ReserveCardAction import ReserveCardAction
 
 #Can only reserve 3 cards
 
@@ -73,7 +73,7 @@ class TestActionReserveCard(unittest.TestCase):
     reserveCardindex = 1
 
     #Act
-    action = ReserveAction(reserveCardTier, reserveCardindex)
+    action = ReserveCardAction(reserveCardTier, reserveCardindex)
     gameboard = action.execute(game.gameBoard)
 
     #Assert

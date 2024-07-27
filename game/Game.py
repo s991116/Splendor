@@ -2,10 +2,13 @@ from __future__ import annotations
 
 from game.GameBoard import GameBoard
 from game.Action import Action
-from game.ReserveAction import ReserveAction
+from game.ReserveCardAction import ReserveCardAction
 from game.TakeGemAction import TakeGemAction
 
 from game.ActionType import ActionType
+import numpy as np
+import numpy.typing as npt
+
 
 class Game():
   def __init__(self, gameBoard: GameBoard):
@@ -24,7 +27,7 @@ class Game():
     if(len(self.gameBoard.players[self.gameBoard.currentPlayerIndex].reserved) < 3):
       for tierIndex in range(len(self.gameBoard.developmentDeckTiersBoardIndexes)):
         for boardCardIndex in self.gameBoard.developmentDeckTiersBoardIndexes[tierIndex]:
-          actions.append(ReserveAction(tierIndex, boardCardIndex))
+          actions.append(ReserveCardAction(tierIndex, boardCardIndex))
     return actions
   
   def takeGemActions(self):
@@ -188,3 +191,8 @@ class Game():
         if(not (nettoGemsTaken in self.nettoGemsTakenCombinations)):
           self.nettoGemsTakenCombinations.add(nettoGemsTaken) # type: ignore
           actions.append(TakeGemAction(nettoGemsTaken))
+
+  def cardPrice(self, tierIndex: int, cardIndex: int) -> npt.NDArray[np.int64]:
+    cardCostValues = self.gameBoard.developmentCardTiers[tierIndex][cardIndex][range(3,8,1)]
+    cardCostValuesWithGold = np.append(cardCostValues, [0])
+    return cardCostValuesWithGold

@@ -4,9 +4,7 @@ from game.Splendor import Splendor
 from game.BuyCardAction import BuyCardAction
 class TestActionBuyCard(unittest.TestCase):
 
-    #buy_card_remove_from_board_replace_with_new
     #buy_to_expencive_card_not_allowed
-    #buy_card_with_gems
     #buy_card_with_developmentcards
     #buy_card_with_developmentcards_gems
     #buy_card_with_gold
@@ -29,15 +27,39 @@ class TestActionBuyCard(unittest.TestCase):
         tierIndex = 0
         boardIndex = 1
         cardIndex = game.gameBoard.developmentDeckTiersBoardIndexes[tierIndex][boardIndex]
-        cardSeleccted = game.gameBoard.developmentCardTiers[tierIndex][cardIndex]
+        cardCostValues = game.cardPrice(tierIndex, cardIndex)
 
         #Act
-        buyCardAction = BuyCardAction(tierIndex, boardIndex)
+        buyCardAction = BuyCardAction(tierIndex, boardIndex, cardCostValues)
         gameBoard = buyCardAction.execute(game.gameBoard)
 
         #Assert
         self.assertIn((tierIndex, cardIndex), gameBoard.players[gameBoard.currentPlayerIndex].developmentCards)
+        self.assertNotIn(cardIndex, game.gameBoard.developmentDeckTiersBoardIndexes[tierIndex])
 
+    def test_buy_card_with_gems(self):
+        #Arrange
+        nrOfPlayers = 2
+        game = Splendor(nrOfPlayers).withFirstPlayerHaveGemStack([4,4,4,4,4,4]).buildGame()
+        
+        tierIndex = 0
+        boardIndex = 1
+        cardIndex = game.gameBoard.developmentDeckTiersBoardIndexes[tierIndex][boardIndex]
+        cardCostValues = game.cardPrice(tierIndex, cardIndex)
+
+        #Act
+        buyCardAction = BuyCardAction(tierIndex, boardIndex, cardCostValues)
+        gameBoard = buyCardAction.execute(game.gameBoard)
+
+        #Assert        
+        print(cardCostValues)
+        playerStartValues = [4,4,4,4,4,4]
+        playerAfterBuyValues = playerStartValues - cardCostValues
+        print(playerAfterBuyValues)
+        gemsFirstPlayer = gameBoard.players[gameBoard.currentPlayerIndex].gemPiles
+
+        self.assertListEqual(list(gemsFirstPlayer), list(playerAfterBuyValues))
+        
 
 if __name__ == "__main__":
     unittest.main()
