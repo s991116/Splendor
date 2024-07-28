@@ -15,7 +15,7 @@ class TestActionReserveCard(unittest.TestCase):
     game = Splendor(nrOfPlayers).buildGame()
 
     #Act
-    actions = game.reserveActions(ActionType.RESERVE)
+    actions = game.reserveActions()
 
     #Assert
     self.assertEqual(len(actions), 12)
@@ -26,7 +26,7 @@ class TestActionReserveCard(unittest.TestCase):
     game = Splendor(nrOfPlayers).with3CardsReserved().buildGame()
 
     #Act
-    actions = game.reserveActions(ActionType.RESERVE)
+    actions = game.reserveActions()
 
     #Assert
     self.assertEqual(len(actions), 0)
@@ -35,7 +35,7 @@ class TestActionReserveCard(unittest.TestCase):
     #Arrange
     nrOfPlayers = 2
     game = Splendor(nrOfPlayers).buildGame()
-    actions = game.reserveActions(ActionType.RESERVE)
+    actions = game.reserveActions()
     gameGoldStackBefore = game.gameBoard.gemPiles[GemType.GOLD]
 
     #Act
@@ -54,7 +54,7 @@ class TestActionReserveCard(unittest.TestCase):
     #Arrange
     nrOfPlayers = 2
     game = Splendor(nrOfPlayers).withEmptyGemStack().buildGame()
-    actions = game.reserveActions(ActionType.RESERVE)
+    actions = game.reserveActions()
 
     #Act
     gameboard = actions[0].execute(game.gameBoard)
@@ -88,7 +88,7 @@ class TestActionReserveCard(unittest.TestCase):
     nrOfPlayers = 2
     game = Splendor(nrOfPlayers).withLastCardsOnBoard().buildGame()
 
-    actions = game.reserveActions(ActionType.RESERVE)
+    actions = game.reserveActions()
 
     #Act
     gameboard = actions[0].execute(game.gameBoard)

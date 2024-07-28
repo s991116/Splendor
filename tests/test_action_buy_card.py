@@ -29,9 +29,36 @@ class TestActionBuyCard(unittest.TestCase):
         self.assertIn((tierIndex, cardIndex), gameBoard.players[gameBoard.currentPlayerIndex].developmentCards)
         self.assertNotIn(cardIndex, game.gameBoard.developmentDeckTiersBoardIndexes[tierIndex])
         
-        playerAfterBuyValues = playerStartValues - cardCostValues
+        playerAfterBuyValuesExpected = playerStartValues - cardCostValues
         gemsFirstPlayer = gameBoard.players[gameBoard.currentPlayerIndex].gemPiles
-        self.assertListEqual(list(gemsFirstPlayer), list(playerAfterBuyValues))
+        self.assertListEqual(list(gemsFirstPlayer), list(playerAfterBuyValuesExpected))
+
+    def test_getBuyActions_can_buy_all_cards_with_many_gems(self):
+        #Arrange
+        nrOfPlayers = 2
+        playerStartValues = [10,10,10,10,10,10]
+        game = Splendor(nrOfPlayers).withFirstPlayerHaveGemStack(playerStartValues).buildGame()
+
+        #Act
+        buyActions = game.buyCardAction()
+
+        #Assert
+        self.assertEqual(len(buyActions), 12)
+
+    def test_getBuyActions_can_only_buy_card_it_can_afford(self):
+        #Arrange
+        nrOfPlayers = 2
+        playerStartValues = [ 0, 1, 1, 0, 0, 0]
+        cheapCard         = [ 0, 1, 1, 0, 0]
+        expenciveCards    = [10,10,10,10,10]
+        game = Splendor(nrOfPlayers).withFirstPlayerHaveGemStack(playerStartValues).withOneCheapAndOtherExpenciveCard(cheapCard, expenciveCards).buildGame()
+
+        #Act
+        buyActions = game.buyCardAction()
+
+        #Assert
+        self.assertEqual(len(buyActions), 1)
+
 
 
 if __name__ == "__main__":

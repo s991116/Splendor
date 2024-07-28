@@ -20,7 +20,20 @@ class Game():
   def nextPlayer(self):
     self.gameBoard.currentPlayerIndex = (self.gameBoard.currentPlayerIndex + 1) % self.nrOfPlayers()
 
-  def reserveActions(self, actionType: ActionType):
+  def buyCardAction(self) -> list[Action]:
+    actions: list[Action] = []
+    player = self.gameBoard.players[self.gameBoard.currentPlayerIndex]
+    playerGems = player.gemPiles
+    for tierIndex in range(len(self.gameBoard.developmentDeckTiersBoardIndexes)):
+      for boardCardIndex in self.gameBoard.developmentDeckTiersBoardIndexes[tierIndex]:
+        cardPrice = self.gameBoard.developmentCardTiers[tierIndex][boardCardIndex][3:8]
+        diff = playerGems[0:5] - cardPrice
+        afford = all(diff >= 0 for diff in diff)
+        if afford:
+          actions.append(ReserveCardAction(tierIndex, boardCardIndex))
+    return actions
+  
+  def reserveActions(self):
     
     actions: list[Action] = []
 
