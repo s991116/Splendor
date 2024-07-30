@@ -24,10 +24,12 @@ class Game():
     actions: list[Action] = []
     player = self.gameBoard.players[self.gameBoard.currentPlayerIndex]
     playerGems = player.gemPiles
+    playerDevelopmentValues = player.developmentValues
     for tierIndex in range(len(self.gameBoard.developmentDeckTiersBoardIndexes)):
       for boardCardIndex in self.gameBoard.developmentDeckTiersBoardIndexes[tierIndex]:
         cardPrice = self.gameBoard.developmentCardTiers[tierIndex][boardCardIndex][3:8]
-        diff = playerGems[0:5] - cardPrice
+        cardPriceAfterDevelopmentValues = cardPrice - playerDevelopmentValues
+        diff = playerGems[0:5] - cardPriceAfterDevelopmentValues
         afford = all(diff >= 0 for diff in diff)
         if afford:
           actions.append(ReserveCardAction(tierIndex, boardCardIndex))

@@ -101,7 +101,7 @@ class Splendor:
     self.developmentDeckTiersBoardIndexes = [[39],[29],[19]]
     return self
   
-  def withDevelopmentValues(self, developmentValues: list[int]):
+  def withFirstPlayerDevelopmentValues(self, developmentValues: list[int]):
     self.players[0].developmentValues = np.array(developmentValues)
     return self
   

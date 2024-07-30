@@ -59,6 +59,24 @@ class TestActionBuyCard(unittest.TestCase):
         #Assert
         self.assertEqual(len(buyActions), 1)
 
+    def test_getBuyActions_that_can_buy_with_developmentcards(self):
+        #Arrange
+        nrOfPlayers = 2
+        playerStartValues = [ 0, 0, 0, 0, 0, 0]
+        cheapCard         = [ 0, 1, 1, 0, 0]
+        expenciveCards    = [10,10,10,10,10]
+        developmentCards  = [ 0, 1, 1, 0, 0]
+        game = Splendor(nrOfPlayers)\
+            .withFirstPlayerHaveGemStack(playerStartValues)\
+            .withOneCheapAndOtherExpenciveCard(cheapCard, expenciveCards)\
+            .withFirstPlayerDevelopmentValues(developmentCards)\
+            .buildGame()
+
+        #Act
+        buyActions = game.buyCardAction()
+
+        #Assert
+        self.assertEqual(len(buyActions), 1)
 
 
 if __name__ == "__main__":
