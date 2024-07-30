@@ -6,7 +6,6 @@ class TestActionBuyCard(unittest.TestCase):
 
 #test_getBuyActions_that_can_buy_with_developmentcards(self):
 #test_getBuyActions_that_can_buy_card_with_gems
-#test_getBuyActions_that_can_buy_card_with_gold
 #test_GetGemCombinations
 
 
@@ -70,6 +69,23 @@ class TestActionBuyCard(unittest.TestCase):
             .withFirstPlayerHaveGemStack(playerStartValues)\
             .withOneCheapAndOtherExpenciveCard(cheapCard, expenciveCards)\
             .withFirstPlayerDevelopmentValues(developmentCards)\
+            .buildGame()
+
+        #Act
+        buyActions = game.buyCardAction()
+
+        #Assert
+        self.assertEqual(len(buyActions), 1)
+
+    def test_getBuyActions_that_can_buy_card_with_gold(self):
+        #Arrange
+        nrOfPlayers = 2
+        playerStartValues = [ 0, 0, 0, 0, 0, 4]
+        cheapCard         = [ 0, 1, 1, 0, 0]
+        expenciveCards    = [10,10,10,10,10]
+        game = Splendor(nrOfPlayers)\
+            .withFirstPlayerHaveGemStack(playerStartValues)\
+            .withOneCheapAndOtherExpenciveCard(cheapCard, expenciveCards)\
             .buildGame()
 
         #Act

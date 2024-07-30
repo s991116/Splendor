@@ -110,7 +110,7 @@ class Splendor:
       for developmentCard in developmentDeck:
         #tier,value,type,green,white,blue,black,red
         developmentCard[3:8] = cardPrice
-        return self
+    return self
 
   def withOneCheapAndOtherExpenciveCard(self, cardPriceOne: list[int], cardPriceRest: list[int]):
     self.withCardPrice(cardPriceRest)

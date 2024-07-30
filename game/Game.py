@@ -4,6 +4,7 @@ from game.GameBoard import GameBoard
 from game.Action import Action
 from game.ReserveCardAction import ReserveCardAction
 from game.TakeGemAction import TakeGemAction
+from game.BuyCardAction import BuyCardAction
 
 from game.ActionType import ActionType
 import numpy as np
@@ -25,14 +26,17 @@ class Game():
     player = self.gameBoard.players[self.gameBoard.currentPlayerIndex]
     playerGems = player.gemPiles
     playerDevelopmentValues = player.developmentValues
+    playerGoldValues = player.gemPiles[5]
     for tierIndex in range(len(self.gameBoard.developmentDeckTiersBoardIndexes)):
       for boardCardIndex in self.gameBoard.developmentDeckTiersBoardIndexes[tierIndex]:
         cardPrice = self.gameBoard.developmentCardTiers[tierIndex][boardCardIndex][3:8]
         cardPriceAfterDevelopmentValues = cardPrice - playerDevelopmentValues
         diff = playerGems[0:5] - cardPriceAfterDevelopmentValues
-        afford = all(diff >= 0 for diff in diff)
+        diffSum = -(np.sum(diff))
+        afford = diffSum <= playerGoldValues
+        buyWithGems = np.array(0)
         if afford:
-          actions.append(ReserveCardAction(tierIndex, boardCardIndex))
+          actions.append(BuyCardAction(tierIndex, boardCardIndex, buyWithGems))
     return actions
   
   def reserveActions(self):
